@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            width: 100px;
+            height: 100px;
+            background: pink;
+            margin: 0 auto;
+            /* transition: all 1s cubic-bezier(0, 0, 0, 1.45); */
+            animation: asd 1s linear infinite;
+        }
+         body{
+            height: 2000px;
+        } 
+         button{
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+        } 
+        @keyframes asd{
+            0%{
+                transform: rotate(0);
+            }
+            100%{
+                transform: rotate(360deg);
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div id="box"></div>
+    <button>返回顶部</button>
+</body>
+
+</html>
+<script>
+    let box = document.querySelector('#box');
+    let flag = -1;
+    let boCli = function(ele){
+        let tim = 1;
+        ele.onclick = function(){
+            let set = setInterval(()=>{
+                if(tim<=0.2){
+                    tim = 0.2;
+                    clearInterval(set);
+                    return;
+                };
+                tim -=0.1;
+                this.style.opacity = tim;
+            },200);
+            if(flag === 1){
+            this.style.animationPlayState= 'running';
+            flag *=-1;
+        }else{
+            this.style.animationPlayState ='paused';
+        flag *=-1;
+        }
+        
+        }
+    };
+    boCli(box);
+
+    let fanHui = function(){
+        let btn = document.querySelector('button');
+        btn.onclick = function(){
+            let scrHei = document.documentElement.scrollTop;
+            let set = setInterval(()=>{
+                if(scrHei<=0){
+                    scrHei = 0;
+                    clearInterval(set);
+                    return;
+                };
+                scrHei -=5;
+                document.documentElement.scrollTop = scrHei;
+            },20)
+        }
+    }
+    fanHui();
+
+</script>
+<!-- <script>
+    let box = document.querySelector('#box');
+    let tim = 0;
+    let hei = document.documentElement.clientWidth - box.offsetWidth;
+    box.onclick = function () {
+        // this.style.left = "500px";
+        // this.style.opacity = '0.2';
+
+        //    let set = setInterval(()=>{ 
+        //        console.log(tim)
+        //         tim++; 
+        //         if(tim>hei){
+        //             clearInterval(set);
+        //         }       
+        //         this.style.left = tim+'px'; 
+
+        //     },20)
+
+        let f = () => {
+            tim++;
+            if (tim > hei) {
+                tim = hei;
+            }
+            this.style.left = tim + 'px';
+            let set = setTimeout(() => {
+                tim === hei ? null : f();
+            }, 20);
+        }
+        f();
+    }
+    window.onresize = function () {
+        hei = document.documentElement.clientWidth - box.offsetWidth;
+    }
+</script> -->
