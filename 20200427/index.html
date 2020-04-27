@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./as/reset.min.css">
+    <style>
+        .box {
+            box-sizing: border-box;
+            margin: 20px auto;
+            padding: 15px;
+            width: 300px;
+            height: 300px;
+            border: 10px solid lightblue;
+            background: lightcyan;
+            font-size: 18px;
+            line-height: 30px;
+        }
+
+        #box2 {
+            width: 200px;
+            height: 200px;
+            background: pink;
+            display: none;
+        }
+        #dv1{
+            width: 600px;
+            height:600px;
+            margin: 100px auto;
+            background: blue;
+        }
+        #dv2{
+            width: 400px;
+            height:400px;
+            margin: 0 auto;
+            background: yellow;
+        }
+        #dv3{
+            width: 200px;
+            height:200px;
+            margin: 0 auto;
+            background: pink;
+        }
+        ul{
+            width: 100%;
+            height: 100%;
+        }
+        ul>li{
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+            border: 2px solid pink;
+            text-align: center;
+        }
+        #bbb{
+            width: 800px;
+            height: 240px;
+            margin: 0 auto;
+        }
+        #bbb1{
+            width: 800px;
+            height: 240px;
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        img{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div id="box" class="box">
+        夫君子之行，静以修身，俭以养德，非淡泊无以明志，非宁静无以致远。夫学须静也，才须学也，非学无以广才，非志无以成学。淫漫则不能励精，险躁则不能冶性，年与时驰，意与日去，遂成枯落，多不接世，悲守穷庐，将复何及~~
+    </div> -->
+    <!-- <div id="box2">
+        用transform：translate(X轴的值，Y轴的值)设置的偏移量，在js中用offsetwidth/...获取不到
+    </div> -->
+    <!-- <input type="text"> -->
+    <!-- <div id="dv1">
+        <div id="dv2">
+            <div id="dv3"></div>
+        </div>
+    </div> -->
+    <!-- <ul id="uu">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>11</li>
+        <li>12</li>
+        <li>13</li>
+        <li>14</li>
+        <li>15</li>
+        <li>16</li>
+        <li>17</li>
+        <li>18</li>
+        <li>19</li>
+        <li>20</li>
+    </ul> -->
+    <div id="bbb">
+        <img src="./轮播图/image/banner01.png" alt="">
+    </div>
+    <div id="bbb1">
+        <img src="./轮播图/image/banner01.png" alt="">
+    </div>
+</body>
+
+</html>
+// 封装的设置样式的方法
+<script>
+    function getCss(element, attr) {
+        let value = window.getComputedStyle(element)[attr];
+        let reg = /^\d+(px|rem|em)?$/i;
+        if (reg.test(value)) {
+            value = parseFloat(value);
+        };
+        return value;
+    };
+    // JS给元素设置样式一般也有几种方法：
+    // =>设置行内样式  元素.style.xxx = xxx | 元素.style.cssText = 'xxx'
+    // =>设置样式类 元素.className = xxx
+    function setCss(element, attr, value) {
+        // 优化：如果传递的是opacity，在IE低版本中用的是filter设置样式
+        if (attr === 'opacity') {
+
+            element['style']['opacity'] = value;
+            element['style']['filter'] = `alpha(opacity=${value * 100})`;
+        };
+        let reg = /^(width|height|margin|padding)?(top|left|bottom|right)?$/i;
+        if (reg.test(attr)) {
+            if (!isNaN(value)) {
+                value += 'px';
+            };
+        };
+        element['style'][attr] = value;
+    };
+    function setGroupCss(element, options) {
+        for (let key in options) {
+            if (!options.hasOwnProperty(key)) break;
+            setCss(element, key, options[key]);
+        };
+    };
+    function css(element) {
+        let len = arguments.length,
+            attr = arguments[1],
+            value = arguments[2];
+        if (len >= 3) {
+            // 单一设置样式
+            setCss(element, attr, value);
+            return;
+        }
+        if (attr !== null && typeof attr === 'object') {
+            setGroupCss(element, attr);
+            return;
+        }
+        return getCss(element, attr);
+    };
+</script>
+
+<script>
+    // let box = document.querySelector('#box');
+    // let inp = document.querySelector('input'),
+    //     box2 = document.querySelector('#box2');
+
+    // 单双击BUG 实现双击的同时会触发两次单击
+    // box.onclick = function(e){
+
+    // }
+
+    // input框按下回车键弹框
+    // inp.onkeydown = function(e){
+    //     if(e.key === "Enter"){
+    //         alert(this.value);
+    //     }
+    //     if(e.keyCode>=48 && e.keyCode<=57 || e.keyCode == 8){
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    // 移动上下左右键实现盒子移动
+    //     box2.t = 0,
+    //     box2.l = 0;
+    // window.onkeydown = function (e) {
+    //     // ArrowUp 上箭头   ArrowDown 下箭头  ArrowLeft     ArrowRight
+    //     switch (e.key) {
+    //         case "ArrowUp":
+    //             box2.t -= 10;
+    //             break;
+    //         case "ArrowDown":
+    //             box2.t += 10;
+    //             break;
+    //         case "ArrowLeft":
+    //             box2.l -= 10;
+    //             break;
+    //         case "ArrowRight":
+    //             box2.l += 10;
+    //             break;
+    //     }
+    //     box2.style.transform = `translate(${box2.l}px,${box2.t}px)`;
+    // }
+
+        // 鼠标右击出现方框
+        // window.oncontextmenu = function(e){
+        //     e.preventDefault();
+        //     let a = e.clientX,
+        //         b = e.clientY;
+        //         console.log(a)
+        //         console.log(b)
+        //         box2.style.display = "block";
+        //         box2.style.transform = `translate(${a}px,${b}px)`;
+
+        // }
+    
+</script>
+<script>
+    // dv1.onclick = function(e){
+    //     console.log('dv1');
+    //     e.stopPropagation();//阻止冒泡
+    // }
+    // dv2.onclick = function(e){
+    //     console.log('dv2');
+    //     e.stopPropagation();
+    // }
+    // dv3.onclick = function(e){
+    //     console.log('dv3');
+    //     e.stopPropagation();
+    // }
+    // dv1.onmouseenter = function(){
+    //     console.log("dv1")
+    // }
+    // dv1.onmouseover = function(){
+    //     console.log("dv11")
+    // }
+    // dv2.onmouseover = function(){
+    //     console.log("dv22")
+    // }
+    // dv3.onmouseover = function(){
+    //     console.log("dv33")
+    // }
+</script>
+<script>
+    // uu.onclick = function(e){
+    //     let n = 0;
+    //     let prev = e.target.previousElementSibling;
+    //     while(prev){
+    //         n++;
+    //         prev = prev.previousElementSibling
+    //     }
+    //     console.log(e.target,n)
+    // }
+</script>
+<script>
+    bbb.onmousemove = function(e){
+        let a = e.clientX,
+            b = e.clientY;
+        bbb1.style.display = "block";
+        // bbb1.style.transform = `translate(${a}px,${b}px)`;
+        bbb1.style.top = `${b}px`;
+        bbb1.style.left = `${a}px`;
+    }
+    bbb.onmouseout = function(e){
+        bbb1.style.display = "none";
+    }
+</script>
