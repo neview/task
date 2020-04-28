@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #fd{
+      margin: 20px auto;
+    }
+    .lit_box{
+      width: 200px;
+      height: 200px;
+      border: 1px solid #ccc;
+      position: relative;
+    }
+    .lit_box .mask{
+        display: none;
+      position: absolute;
+      left: 0;
+      top:0;
+      width:100px;
+      height: 100px;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .lit_box img{
+      width: 100%;
+      height: 100%;
+    }
+    .big_box{
+      width: 300px;
+      height: 300px;
+      border:1px solid #ccc;
+      position: relative;
+      left: 205px;
+      top:-202px;
+      overflow: hidden;
+      display: none;
+    }
+    .big_box img{
+        width: 600px;
+        height: 600px;
+        position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div id="fd">
+    <div class="lit_box">
+      <div class="mask"></div>
+      <img src="https://img12.360buyimg.com/n1/s450x450_jfs/t1/91729/1/15790/72702/5e74233aE10f66d08/8a7fc4d0245a3b62.jpg" alt="">
+    </div>
+    <div class="big_box">
+      <img src="https://img12.360buyimg.com/n1/s450x450_jfs/t1/91729/1/15790/72702/5e74233aE10f66d08/8a7fc4d0245a3b62.jpg" alt="">
+    </div>
+  </div>
+</body>
+<html>
+<script src="../jQuery/node_modules/jquery/dist/jquery.js"></script>
+<script>
+    // let lit = document.querySelector('.lit_box'),
+    //     mask = document.querySelector('.mask'),
+    //     big = document.querySelector('.big_box'),
+    //     bigImg = big.querySelector('img');
+    //     // 鼠标移入显示蒙版图和放大后的图片
+    // lit.onmouseenter = function(){
+    //   mask.style.display = 'block';
+    //   big.style.display = 'block';
+    // };
+    // lit.onmouseleave = function(){
+    //   mask.style.display = 'none';
+    //   big.style.display = 'none';
+    // }
+    // lit.onmousemove = function(e){
+    //   let o = offset(this);
+    //   let l = e.pageX - o.l -mask.clientWidth/2;
+    //       t = e.pageY -o.t -mask.clientHeight/2;
+
+    //   let maxL = this.clientWidth -mask.clientWidth,
+    //       maxT = this.clientHeight - mask.clientHeight;
+    //       l = l<0? 0:(l>maxL ? maxL:l);
+    //       t = t<0? 0:(t>maxT ? maxT:t);
+    //   mask.style.left = l+'px';
+    //   mask.style.top = t+'px';
+
+    //   let n = big.clientHeight / mask.clientHeight;
+    //   bigImg.style.left = -l*n +'px';
+    //   bigImg.style.top = -t*n +'px';
+    // }
+
+      let $lit = $('.lit_box'),
+          $mask = $('.mask'),
+          $big = $('.big_box'),
+          $bigImg = $('.big_box>img');
+      $lit.on('mouseenter',function(){
+        $mask.show();
+        $big.show();
+      });
+      $lit.on('mouseleave',function(){
+        $mask.hide();
+        $big.hide();
+      });
+
+      $lit.on('mousemove',function(e){
+        let $o = $(this).offset();
+        let $left = e.pageX - $o.left -($mask.width()/2);
+        let $top = e.pageY - $o.top -($mask.height()/2);
+
+        let $maxL = $(this).width() -$mask.width(),
+            $maxT = $(this).height() - $mask.height();
+            $left =$left<0? 0:($left>$maxL ? $maxL:$left);
+            $top = $top<0? 0:($top>$maxT ? $maxT:$top);
+        $mask.css({'left':$left+'px','top':$top+'px'})
+        let $n = $big.width() / $mask.height();
+        $bigImg.css({"left":-$left*$n +'px',"top":-$top*$n +'px'});
+      })
+
+    function offset(ele){
+    // 可以获取到 ele 这个元素到body的偏移量
+    let l = ele.offsetLeft,
+        t = ele.offsetTop;// 获取当前元素到父级参照物的偏移量
+    let parent = ele.offsetParent;// 获取父级参照物 
+    while(parent){
+      // 若父级参照物存在；
+      l += (parent.clientLeft||0) + parent.offsetLeft;
+      t += (parent.clientTop||0) + parent.offsetTop;
+      parent = parent.offsetParent;
+    }  
+    return {
+      l,t
+    }
+  }
+</script>
